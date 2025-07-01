@@ -1,0 +1,142 @@
+
+
+
+<!-- High-Level Components -->
+
+                        +--------------------------+
+                        |     External Price APIs  |
+                        +------------+-------------+
+                                     |
+                         +-----------v----------+
+                         |   Price Ingestion     |
+                         | (Polling or Webhooks) |
+                         +-----------+----------+
+                                     |
+                +--------------------v------------------+
+                |          Message Queue (Kafka)        |
+                | (Asset Price Updates / Portfolio Jobs)|
+                +--------------------+------------------+
+                                     |
+          +--------------------------v---------------------------+
+          |        Portfolio Updater Microservice                |
+          | - Listens to Kafka                                     |
+          | - Recalculates user portfolios                        |
+          | - Writes to DB & Cache                                |
+          +------------------+------------------------------------+
+                             |
+          +------------------v----------------+
+          |        Database (PostgreSQL)      |
+          | Users, Accounts, Holdings, Prices |
+          +------------------+----------------+
+                             |
+          +------------------v-----------------+
+          |       Redis (In-Memory Cache)      |
+          |  - For real-time dashboard queries |
+          +------------------+-----------------+
+                             |
+          +------------------v-----------------+
+          |      API Gateway / BFF Layer       |
+          |   REST/GraphQL for Mobile/Web      |
+          +------------------+-----------------+
+                             |
+          +------------------v------------------+
+          |           Web / Mobile App          |
+          |       Portfolio View (User)         |
+          +-------------------------------------+
+
+
+<!-- 1.Core High-Level Components: -->
+
+
+Component	Purpose
+PostgreSQL (RDS)	Stores all persistent user/asset data
+
+Redis	Caches real-time portfolio snapshots
+
+Kafka	Orchestrates async updates from price sources
+
+Price Ingestion Service	Fetches asset prices from NSE/BSE/AMFI etc.
+Portfolio Updater Service	Recalculates portfolio values
+
+API Gateway / BFF (NestJS)	Exposes REST/GraphQL APIs with auth
+React/Flutter App	Displays UI (charts, asset values, delta)
+
+<!-- 2. Core Requirements -->
+
+
+
+Type	Requirement:
+
+Functional	View portfolio in real-time
+Functional	Support assets: stocks & mutual funds
+
+Functional	Periodic price update from multiple sources
+
+Non-Functional	Scalability (beyond 250 users in future)
+
+Non-Functional	Fault tolerance with retries and fallback
+Non-Functional	<100ms API latency using caching
+
+<!-- 3. Database Schema -->
+
+
+
+
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT,
+  email TEXT UNIQUE
+);
+
+CREATE TABLE accounts (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  name TEXT
+);
+
+CREATE TABLE assets (
+  id UUID PRIMARY KEY,
+  symbol TEXT UNIQUE,
+  name TEXT,
+  type TEXT CHECK (type IN ('stock', 'mutual_fund'))
+);
+
+CREATE TABLE holdings (
+  id UUID PRIMARY KEY,
+  account_id UUID REFERENCES accounts(id),
+  asset_id UUID REFERENCES assets(id),
+  quantity NUMERIC(12,4)
+);
+
+CREATE TABLE prices (
+  id SERIAL PRIMARY KEY,
+  asset_id UUID REFERENCES assets(id),
+  price NUMERIC(10,2),
+  timestamp TIMESTAMP DEFAULT NOW()
+);
+
+
+
+<!-- 4.API -->
+
+// Get real-time portfolio
+GET /portfolio
+Headers: Authorization: Bearer <token>
+Response: { totalValue: 5,34,000, lastUpdated: '2025-06-28T12:10:00Z' }
+
+// Get holdings
+GET /accounts/:id/holdings
+
+// Get price of an asset
+GET /assets/:symbol/price
+
+
+<!-- 5. Scaling Strategy -->
+
+
+Component	Strategy
+Kafka	Partition by asset
+Services	Stateless microservices
+PostgreSQL	Read replicas & indexing
+Redis	Cluster with LRU eviction
+APIs	Load balancer + horizontal
