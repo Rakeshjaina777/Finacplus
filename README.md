@@ -1,7 +1,7 @@
 
 
 ````markdown
-# 💼 FinacPlus Software  – 28 June 2025
+# 💼 FinacPlus Software  – 1July 2025
 
 
 ## ✅ Problem 1: Special Cipher (Caesar Cipher + RLE)
@@ -70,6 +70,9 @@ reviews(id, product_id, user_id, rating, comment)
 
 ## ✅ Problem 4: Real-Time Asset Portfolio (System Design)
 
+![image](https://github.com/user-attachments/assets/c45f9ea0-62d9-4b48-8f03-a2dc1a0cdbb6)
+
+
 ### 🧠 Requirements
 
 * 250 users, live portfolio of stocks/mutuals
@@ -125,10 +128,4 @@ holdings(id, account_id, asset_id, qty), prices(asset_id, price, ts)
 
 ---
 
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# Finacplus
+
