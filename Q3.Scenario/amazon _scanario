@@ -1,0 +1,131 @@
+  <!-- Waht is Metadat -->
+Metadata is data about data. For a product like a shirt, metadata includes all descriptive, structural, and behavioral attributes that help:
+Store,Search,FilterRecommand etc
+
+<!-- ---------------------------High Level Design--------------------------: -->
+
+    Database Design :
+
+
+<!-- Product Table: -->
+
+ Field: id,   title,  description,  brand_id,  category_id, etc.
+
+<!-- Variant Table: -->
+
+ Field:  variant_id,  product_id,  color, size,  price,  stock, etc.
+
+<!-- Image Table: -->
+
+ Field:  image_id,  product_id,  url, type
+
+<!-- Review Table: -->
+
+ Field:  review_id,  user_id,  product_id, rating, comment, etc.
+
+<!-- Brand/Category Tables: -->
+
+ Field:  Properly normalized reference tables.
+
+
+<!-- DB Choice:  -->
+PostgreSQL or MySQL for structured metadata (ACID), MongoDB for flexible catalogs (NoSQL)
+
+
+<!-- ------------------------------------ER Table and Relaltionship----------------------------: -->
+
+<!-- -- ✅ 1. Brands Table -->
+
+
+CREATE TABLE brands (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  description TEXT
+);
+
+<!-- -- ✅ 2. Categories Table  -->
+
+CREATE TABLE categories (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL,
+  parent_id UUID REFERENCES categories(id) -- self-referencing for subcategories
+);
+
+<!-- -- ✅ 3. Products Table -->
+
+CREATE TABLE products (
+  id UUID PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  brand_id UUID REFERENCES brands(id),
+  category_id UUID REFERENCES categories(id),
+  slug TEXT UNIQUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+<!-- -- ✅ 4. Variants Table (e.g., color-size combinations of a product) -->
+
+CREATE TABLE variants (
+  id UUID PRIMARY KEY,
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  size TEXT NOT NULL,
+  color TEXT NOT NULL,
+  price NUMERIC(10, 2) NOT NULL,
+  discount_price NUMERIC(10, 2),
+  stock_quantity INT DEFAULT 0,
+  sku TEXT UNIQUE,
+  weight_grams INT,
+  is_active BOOLEAN DEFAULT TRUE
+);
+
+<!-- -- ✅ 5. Images Table (supports both product-level and variant-level images) -->
+
+CREATE TABLE images (
+  id UUID PRIMARY KEY,
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  variant_id UUID REFERENCES variants(id),
+  url TEXT NOT NULL,
+  type TEXT CHECK (type IN ('main', 'thumbnail', 'variant')),
+  position INT DEFAULT 0
+);
+
+<!-- -- ✅ 6. Users Table (minimal for review authors) -->
+
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT,
+  email TEXT UNIQUE,
+  password TEXT
+);
+
+<!-- -- ✅ 7. Reviews Table (1 review per product by user) -->
+
+CREATE TABLE reviews (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  rating INT CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+<!-- 🔄 Relationships Summary -->
+
+
+From Table	Column	→ To Table	Relationship
+
+products	brand_id	brands.id	Many-to-One
+
+products	category_id	categories.id	Many-to-One
+
+variants	product_id	products.id	Many-to-One
+
+images	product_id	products.id	Many-to-One
+
+images	variant_id	variants.id	Many-to-One
+
+reviews	product_id	products.id	Many-to-One
+
+reviews	user_id	users.id	Many-to-One
