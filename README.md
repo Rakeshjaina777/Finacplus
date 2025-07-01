@@ -70,6 +70,9 @@ reviews(id, product_id, user_id, rating, comment)
 
 ## ✅ Problem 4: Real-Time Asset Portfolio (System Design)
 
+![image](https://github.com/user-attachments/assets/c45f9ea0-62d9-4b48-8f03-a2dc1a0cdbb6)
+
+
 ### 🧠 Requirements
 
 * 250 users, live portfolio of stocks/mutuals
