@@ -4,7 +4,7 @@ Store,Search,FilterRecommand etc
 
 <!-- ---------------------------High Level Design--------------------------: -->
 
-    Database Design :
+                                Database Design :
 
 
 <!-- Product Table: -->
@@ -23,9 +23,6 @@ Store,Search,FilterRecommand etc
 
  Field:  review_id,  user_id,  product_id, rating, comment, etc.
 
-<!-- Brand/Category Tables: -->
-
- Field:  Properly normalized reference tables.
 
 
 <!-- DB Choice:  -->

@@ -1,6 +1,6 @@
 // Q2 .Problem Understanding
 
-// We are given coin denominations: {1, 2, 5, 10, 20, 50}
+// We are given coin denominations: {1, 2, 5, 10, 20, 50}(given)
 
 // We must compute for each number 1 to 99 the minimum number of units used to reach that value.
 
@@ -10,9 +10,11 @@
 
 
 //  Time & Space:
+
 // Time: O(2⁶ × 100) → Exponential (~slow for larger n)
 
 // Space: O(depth) recursion stack (at most 100)
+
 
 // Code:
 
@@ -26,9 +28,9 @@ vector<int> coins = {1, 2, 5, 10, 20, 50};
 
 int minUnitsBrute(int target, int idx = 0) {
 
-    if (target == 0) return 0;
+         if (target == 0) return 0;
 
-    if (target < 0 || idx == coins.size()) return INT_MAX;
+          if (target < 0 || idx == coins.size()) return INT_MAX;
 
 
     int take = minUnitsBrute(target - coins[idx], idx);
@@ -55,7 +57,7 @@ void bruteCoinUsage() {
 
 // Optimal Approach (Dynamic Programming)
 
-// We’ll use the classic Unbounded Knapsack DP to compute min units needed for each value.
+// We’ll use the classic Knapsack DP ;
 
 // Time & Space:
 // Time: O(n × m) = O(100 × 6) → very efficient
@@ -99,3 +101,64 @@ void optimalCoinUsage() {
 
 // "Test Case 1 - Value: 50, Units: " << minUnitsDP(50, coins) << " (Expected: 1)" << endl;
 
+
+
+
+//---------------------- backend services class logic and implementation ve logic abo----------------------
+
+
+
+export class CoinUsageService {
+
+  private readonly coins = [1, 2, 5, 10, 20, 50];
+
+
+  minUnitsDP(target: number): number {
+
+
+    const dp = Array(target + 1).fill(Infinity);
+
+          dp[0] = 0;
+
+     for (const coin of this.coins) {
+
+        for (let i = coin; i <= target; i++) {
+
+        dp[i] = Math.min(dp[i], 1 + dp[i - coin]);
+
+      }
+    }
+
+    return dp[target];
+  }
+
+  getMinUnitsForRange(): { value: number; units: number }[] {
+
+      const result = [];
+
+    for (let i = 1; i < 100; i++) {
+
+      result.push({ value: i, units: this.minUnitsDP(i) });
+
+    }
+
+    return result;
+  }
+
+  getAverageUnitsUsed(): number {
+
+    let total = 0;
+
+    for (let i = 1; i < 100; i++) {
+
+      total += this.minUnitsDP(i);
+    }
+    return total / 99;
+  }
+
+  getUnitsForSingleValue(value: number): number {
+
+    return this.minUnitsDP(value);
+
+  }
+}

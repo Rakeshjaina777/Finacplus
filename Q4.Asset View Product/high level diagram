@@ -13,7 +13,7 @@
                          +-----------+----------+
                                      |
                 +--------------------v------------------+
-                |          Message Queue (Kafka)        |
+                | Message Queue (Kafka/RabbitMq)        |
                 | (Asset Price Updates / Portfolio Jobs)|
                 +--------------------+------------------+
                                      |
