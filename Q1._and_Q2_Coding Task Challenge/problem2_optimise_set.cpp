@@ -94,3 +94,8 @@ void optimalCoinUsage() {
     cout << "Avg units used: " << total / 99.0 << endl;
 }
 
+
+// Custome Test Case
+
+// "Test Case 1 - Value: 50, Units: " << minUnitsDP(50, coins) << " (Expected: 1)" << endl;
+

@@ -12,6 +12,15 @@
 // Scan the result and manually count repeated characters for RLE.
 
 
+// Custom test case:
+// Input: AAAAAA, shift: 2
+// Caesar: CCCCCCC
+// RLE: C6
+// Output: C6 — Verified
+
+
+
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -109,4 +118,6 @@ string specialCipherOptimal(string input, int shift) {
 // Time: O(n)
 
 // Space: O(1) extra (no temporary shifted string).
+
+
 
