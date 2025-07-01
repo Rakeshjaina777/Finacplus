@@ -129,3 +129,124 @@ images	variant_id	variants.id	Many-to-One
 reviews	product_id	products.id	Many-to-One
 
 reviews	user_id	users.id	Many-to-One
+
+
+
+// product.controller.ts
+import { Request, Response } from 'express';
+
+import prisma from '../prisma';
+
+export const createProduct = async (req: Request, res: Response) => {
+
+
+  try {
+
+    const { title, description, brandId, categoryId, variants, images } = req.body;
+
+
+    const product = await prisma.product.create({
+
+      data: {
+
+        title,
+        description,
+
+        brandId,
+
+        categoryId,
+
+        variants: {
+          create: variants.map(v => ({
+            size: v.size,
+
+            color: v.color,
+
+            price: v.price,
+            discountPrice: v.discountPrice,
+            stockQuantity: v.stockQuantity,
+            sku: v.sku,
+            weightGrams: v.weightGrams,
+          })),
+        },
+        images: {
+          create: images.map(i => ({
+
+            url: i.url,
+
+            type: i.type,
+
+            position: i.position
+          })),
+        }
+
+
+      },
+
+      include: { variants: true, images: true }
+    });
+
+    res.status(201).json(product);
+  } catch (err) {
+
+    console.error('Error creating product:', err);
+
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+-- Filter API: 
+
+export const filterProducts = async (req: Request, res: Response) => {
+
+  const { color, size, maxPrice } = req.query;
+
+
+  const products = await prisma.product.findMany({
+
+    where: {
+
+      variants: {
+
+        some: {
+
+          color: color as string,
+
+          size: size as string,
+
+          price: { lte: Number(maxPrice) }
+        }
+      }
+    },
+    include: {
+       variants: true, brand: true,
+        category: true }
+  });
+
+  res.json(products);
+};
+
+
+-- ratting
+
+export const getAverageRating = async (req: Request, res: Response) => {
+
+  const productId = req.params.id;
+
+  const result = await prisma.review.aggregate({
+
+    _avg: {
+
+      rating: true
+
+    },
+    where: { productId }
+
+  });
+
+
+  res.json({ 
+    avgRating: result._avg.rating ?? 0 
+  });
+};
