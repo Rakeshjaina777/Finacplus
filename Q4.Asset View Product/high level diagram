@@ -45,6 +45,8 @@
           +-------------------------------------+
 
 
+
+
 <!-- 1.Core High-Level Components: -->
 
 
@@ -135,8 +137,11 @@ GET /assets/:symbol/price
 
 
 Component	Strategy
+
 Kafka	Partition by asset
+
 Services	Stateless microservices
+
 PostgreSQL	Read replicas & indexing
 Redis	Cluster with LRU eviction
 APIs	Load balancer + horizontal
