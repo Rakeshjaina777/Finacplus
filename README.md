@@ -125,10 +125,4 @@ holdings(id, account_id, asset_id, qty), prices(asset_id, price, ts)
 
 ---
 
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# FINACPLUS_ASS
-# Finacplus
+
