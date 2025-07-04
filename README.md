@@ -1,10 +1,10 @@
 
 
 ````markdown
-# 💼 FinacPlus Software  – 1July 2025
+# 💼 FinacPlus 
 
 
-## ✅ Problem 1: Special Cipher (Caesar Cipher + RLE)
+## ✅ Special Cipher (Caesar Cipher + RLE)
 
 ```cpp
 string specialCipher(string s, int shift) {
@@ -25,7 +25,7 @@ string specialCipher(string s, int shift) {
 
 ---
 
-## ✅ Problem 2: Optimized Units (1 to 99)
+## ✅  Optimized Units (1 to 99)
 
 ```cpp
 vector<int> coins = {1, 2, 5, 10, 20, 50};
@@ -47,7 +47,7 @@ void computeMinUnits() {
 
 ---
 
-## ✅ Problem 3: Product Metadata for Amazon
+## ✅  Product Metadata for Amazon
 
 **Metadata for Shirt:**
 
@@ -68,7 +68,7 @@ reviews(id, product_id, user_id, rating, comment)
 
 ---
 
-## ✅ Problem 4: Real-Time Asset Portfolio (System Design)
+## ✅Real-Time Asset Portfolio (System Design)
 
 ![image](https://github.com/user-attachments/assets/c45f9ea0-62d9-4b48-8f03-a2dc1a0cdbb6)
 
